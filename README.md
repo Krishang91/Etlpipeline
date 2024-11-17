@@ -3,7 +3,7 @@
 
 # Astronomer Project: ETL Pipeline with NASA API Integration
 
-Welcome to Astronomer! This project was generated using the `astro dev init` command via the Astronomer CLI. It demonstrates how to develop and deploy Apache Airflow pipelines that pull data from NASA's API, process it, and store it in a PostgreSQL database. It also includes GitHub Actions for automated deployment to Astronomer Cloud.
+Welcome to Astronomer! This project was generated using the `astro dev init` command via the Astronomer CLI. It demonstrates how to develop and deploy Apache Airflow pipelines that pull data from NASA's API, process it, and store it in an **AWS PostgreSQL server**. It also includes GitHub Actions for automated deployment to Astronomer Cloud.
 
 ---
 
