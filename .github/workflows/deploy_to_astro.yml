@@ -1,35 +1,25 @@
-name: Deploy to Astro Cloud
+name: Deploy to Astronomer Cloud
 
 on:
   push:
     branches:
-      - main  # Deploy only on changes to the main branch
+      - main  # Trigger deployment on changes to the main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'  # Adjust according to your Astro project requirements
-
-    - name: Install Astro CLI
-      run: |
-        curl -sSL https://install.astronomer.io | sudo bash
-        astro version
-
-    - name: Authenticate to Astro Cloud
-      env:
-        ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
-        ASTRONOMER_SECRET: ${{ secrets.ASTRONOMER_SECRET }}
-      run: |
-        echo "$ASTRONOMER_SECRET" | astro auth login --token --username $ASTRONOMER_KEY_ID
-
-    - name: Deploy to Astro Cloud
-      run: |
-        astro deploy -f --workspace-id ${{ secrets.ASTRO_WORKSPACE_ID }} --deployment-id ${{ secrets.ASTRO_DEPLOYMENT_ID }}
+      # Step 2: Deploy to Astronomer Cloud
+      - name: Deploy to Astronomer Cloud
+        uses: astro/deploymentaction@v8
+        with:
+          path: "./"  # Path to your project directory, adjust if necessary
+          deployment-id: ${{ secrets.ASTRO_DEPLOYMENT_ID }}  # Deployment ID
+        env:
+          ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}  # Astronomer API Key ID
+          ASTRONOMER_SECRET: ${{ secrets.ASTRONOMER_SECRET }}  # Astronomer API Secret
