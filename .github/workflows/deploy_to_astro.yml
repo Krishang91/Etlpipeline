@@ -10,17 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Deploy to Astronomer Cloud
-      - name: Deploy to Astronomer Cloud
-        uses: astronomer/deploy-action@v0.8.0
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-           # Path to your project directory, adjust if necessary
-          deployment-id: ${{ secrets.ASTRO_DEPLOYMENT_ID }}
-          action:  'deploy'
+          python-version: '3.9'  # Adjust according to your Astro project requirements
+
+      - name: Install Astro CLI
+        run: |
+          curl -sSL https://install.astronomer.io | sudo bash
+          astro version
+
+      - name: Authenticate to Astronomer Cloud
         env:
-          ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}  # Astronomer API Key ID
-          ASTRONOMER_SECRET: ${{ secrets.ASTRONOMER_SECRET }}  # Astronomer API Secret
+          ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
+          ASTRONOMER_SECRET: ${{ secrets.ASTRONOMER_SECRET }}
+        run: |
+          astro login --token-login "$ASTRONOMER_SECRET"
+
+      - name: Deploy to Astronomer Cloud
+        run: |
+          astro deploy ${{ secrets.ASTRO_DEPLOYMENT_ID }} --dags
